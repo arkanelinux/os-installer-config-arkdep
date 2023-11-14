@@ -35,6 +35,6 @@ quit_on_err () {
 #
 # Ensure we are able to connect with the image repo
 printf 'Checking for connectivity to the image repository... '
-wget -P /home/arkane/ https://repo.arkanelinux.org/ | quit_on_err 'Failed to connect with Arkane repositories'
+wget -P /home/arkane/ https://repo.arkanelinux.org/ || quit_on_err 'Failed to connect with Arkane repositories'
 
 exit 0
