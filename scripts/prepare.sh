@@ -22,11 +22,8 @@ fi
 # Function used to quit and notify user or error
 quit_on_err () {
 	if [[ -v $1 ]]; then
-		printf '$1\n'
+		printf "$1\n"
 	fi
-
-	# Ensure the terminal has time to print before exiting
-	sleep 2
 
 	exit 1
 }
