@@ -114,6 +114,10 @@ for mountpoint in $workdir $workdir/boot; do
 	mountpoint -q $mountpoint || quit_on_err "No volume mounted to $mountpoint"
 done
 
+# Grab package lists
+readarray base_packages < $osidir/bits/base.list || quit_on_err 'Failed to read base.list'
+readarray arkdep_fallback_packages < $osidir/bits/arkdep.list || quit_on_err 'Failed to read arkdep.list'
+
 # Install the core fallback system
 # Retry installing three times before quitting
 for n in {1..3}; do
@@ -125,7 +129,7 @@ for n in {1..3}; do
 	else
 		if [[ $n == 3 ]]; then
 			quit_on_err 'Failed pacstrap after 3 retries'
-	fi
+		fi
 	fi
 done
 
@@ -135,6 +139,22 @@ sudo cp -v /etc/pacman.conf $workdir/etc/pacman.conf || quit_on_err 'Failed to c
 # For some reason Arch does not populate the keyring upon installing
 # arkane-keyring, thus we have to populate it manually
 sudo arch-chroot $workdir pacman-key --populate arkane || quit_on_err 'Failed to populate pacman keyring with Arkane keys'
+
+# Install the remaining packages in fallback system
+# Retry installing three times before quitting
+for n in {1..3}; do
+	sudo arch-chroot $workdir pacman -S --noconfirm ${arkane_fallback_packages[*]}
+	exit_code=$?
+
+	if [[ $exit_code == 0 ]]; then
+		break
+	else
+		if [[ $n == 3 ]]; then
+			quit_on_err 'Failed pacman after 3 retries'
+		fi
+	fi
+done
+
 
 # Install the systemd-boot bootloader
 sudo arch-chroot $workdir bootctl install || quit_on_err 'Failed to install systemd-boot'

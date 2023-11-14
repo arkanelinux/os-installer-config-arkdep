@@ -4,7 +4,6 @@ linux-firmware
 amd-ucode
 intel-ucode
 arkane-keyring
-arkdep
 btrfs-progs
 zsh
 zsh-syntax-highlighting
