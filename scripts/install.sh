@@ -143,7 +143,7 @@ sudo arch-chroot $workdir pacman-key --populate arkane || quit_on_err 'Failed to
 # Install the remaining packages in fallback system
 # Retry installing three times before quitting
 for n in {1..3}; do
-	sudo arch-chroot $workdir pacman -S --noconfirm ${arkane_fallback_packages[*]}
+	sudo arch-chroot $workdir pacman -S --noconfirm ${arkdep_fallback_packages[*]}
 	exit_code=$?
 
 	if [[ $exit_code == 0 ]]; then
