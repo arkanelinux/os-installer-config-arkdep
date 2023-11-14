@@ -1,0 +1,6 @@
+LABEL=arkane_root		/home		btrfs		rw,relatime,discard=async,space_cache=v2,subvol=arkdep/shared/home,compress=zstd	0 0
+LABEL=arkane_root		/var		btrfs		rw,relatime,discard=async,space_cache=v2,subvol=arkdep/shared/var,compress=zstd	0 0
+LABEL=arkane_root		/arkdep		btrfs		rw,relatime,discard=async,space_cache=v2,subvol=arkdep,compress=zstd	0 0
+UUID=%boot_uuid%		/boot		vfat		rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro	0 2
+
+/var/swapfile				none      	swap      	defaults  	0 0
