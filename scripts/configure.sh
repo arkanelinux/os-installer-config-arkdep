@@ -57,12 +57,16 @@ fi
 # Generate the fstab file for fallback
 genfstab $workdir >> sudo tee $workdir/etc/fstab
 
+
 ## Perpare for arkep deployment
 #
 # Write overlay_arkdep
 for f in $(ls $osidir/overlay_arkdep/); do
 	sudo cp -rv $osidir/overlay_arkdep/$f $workdir/arkdep/overlay/
 done
+
+# Update fstab with /boot config
+grep '/boot' $workdir/etc/fstab >> $workdir/arkdep/overlay/etc/fstab
 
 # Ensure etc exists in arkdep overlay, it should already, but lets make sure anyway
 sudo mkdir $workdir/arkdep/overlay/etc
