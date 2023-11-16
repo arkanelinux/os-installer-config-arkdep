@@ -80,7 +80,7 @@ echo "LANG=\"$OSI_LOCALE\"" | sudo tee $workdir/etc/locale.conf $workdir/arkdep/
 
 # Set timezome
 sudo ln -sf /usr/share/zoneinfo/$OSI_TIMEZONE $workdir/etc/localtime || quit_on_err 'Failed to set timezone'
-sudo ln -sf /usr/share/zoneinfo/$OSI_TIMEZONE $workdir/arkdep/etc/localtime || quit_on_err 'Failed to set timezone in arkdep overlay'
+sudo ln -sf /usr/share/zoneinfo/$OSI_TIMEZONE $workdir/arkdep/overlay/etc/localtime || quit_on_err 'Failed to set timezone in arkdep overlay'
 
 # Generate locales
 sudo arch-chroot $workdir locale-gen || quit_on_err 'Failed to locale-gen'
