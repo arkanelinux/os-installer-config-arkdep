@@ -165,6 +165,9 @@ sudo grep "^${firstname,,}\|^root" $workdir/etc/shadow | sudo tee $workdir/arkde
 sudo grep "^${firstname,,}\|^root\|^wheel" $workdir/etc/group | sudo tee $workdir/arkdep/overlay/etc/group || quit_on_err 'Failed to write group to overlay'
 sudo cp -v $workdir/etc/{subgid,subuid} $workdir/arkdep/overlay/etc/ || quit_on_err 'Failed to copy subgid and subuid to overlay'
 
+# Prep user homedir
+sudo arch-chroot $workdir mkhomedir_helper "$OSI_USER_NAME"
+
 ## Arkdep deployment
 #
 # Deploy latest image
