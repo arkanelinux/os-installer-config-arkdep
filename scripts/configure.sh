@@ -100,7 +100,7 @@ if [[ $OSI_USE_ENCRYPTION == 1 ]]; then
 	declare -r uuid=$(sudo blkid -o value -s UUID ${OSI_DEVICE_PATH}2)
 
 	# Overwrite default systemd-boot template
-	cat <<- END > $workdir/arkdep/templates/systemd-boot
+	cat <<- END | sudo tee $workdir/arkdep/templates/systemd-boot
 	title Arkane GNU/Linux - arkdep
 	linux /arkdep/%target%/vmlinuz
 	initrd /amd-ucode.img
