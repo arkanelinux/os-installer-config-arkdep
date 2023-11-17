@@ -167,7 +167,7 @@ sudo cp -v $workdir/etc/{subgid,subuid} $workdir/arkdep/overlay/etc/ || quit_on_
 
 # Prep user homedir
 sudo arch-chroot $workdir mkdir -p "/arkdep/shared/home/${firstname,,}" || quit_on_err 'Failed to create userhome on arkdep home subvolume'
-sudo arch-chroot $workdir cp -r /etc/skel "/arkdep/shared/home/${firstname,,}" || quit_on_err 'Failed to copy skel to userhome'
+sudo arch-chroot $workdir cp -r /etc/skel/. "/arkdep/shared/home/${firstname,,}" || quit_on_err 'Failed to copy skel to userhome'
 sudo arch-chroot $workdir chown "${firstname,,}:${firstname,,}" "/arkdep/shared/home/${firstname,,}" || quit_on_err 'Failed to change userhome ownership permissions'
 
 ## Arkdep deployment
