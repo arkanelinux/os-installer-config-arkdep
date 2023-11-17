@@ -130,11 +130,16 @@ for n in {1..3}; do
 done
 
 # Copy the ISO's pacman.conf file to the new installation
-sudo cp -v /etc/pacman.conf $workdir/etc/pacman.conf || quit_on_err 'Failed to copy local pacman.conf to new root'
+grep -v 'localrepo' /etc/pacman.conf | sudo tee $workdir/etc/pacman.conf || quit_on_err 'Failed to copy local pacman.conf to new root'
 
 # For some reason Arch does not populate the keyring upon installing
 # arkane-keyring, thus we have to populate it manually
 sudo arch-chroot $workdir pacman-key --populate arkane || quit_on_err 'Failed to populate pacman keyring with Arkane keys'
+
+# If localrepo exists, mount it
+if [[ -d /var/localrepo ]]; then
+	sudo mount -v -m --bind /var/localrepo $workdir/var/localrepo || quit_on_err 'Failed to mount localrepo'
+fi
 
 # Install the remaining packages in fallback system
 # Retry installing three times before quitting
