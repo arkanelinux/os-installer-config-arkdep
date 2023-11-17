@@ -53,9 +53,13 @@ quit_on_err () {
 # Generate the fstab file for fallback
 genfstab $workdir >> sudo tee $workdir/etc/fstab
 
-
 ## Perpare for arkep deployment
 #
+# Copy overlay to new root
+for f in $(ls $osidir/overlay/); do
+	sudo cp -rv $osidir/overlay/$f $workdir/ || quit_on_err 'Failed to copy overlay to workdir'
+done
+
 # Write overlay_arkdep
 for f in $(ls $osidir/overlay_arkdep/); do
 	sudo cp -rv $osidir/overlay_arkdep/$f $workdir/arkdep/overlay/
@@ -156,20 +160,20 @@ sudo arch-chroot $workdir usermod -a -G wheel "${firstname,,}" || quit_on_err 'F
 echo "root:$OSI_USER_PASSWORD" | sudo arch-chroot $workdir chpasswd || quit_on_err 'Failed to set root password'
 
 # Add non-system user accounts to overlay
-sudo grep "^${firstname,,}\|^root" $workdir/etc/passwd | sudo tee $workdir/arkdep/overlay/etc/passwd
-sudo grep "^${firstname,,}\|^root" $workdir/etc/shadow | sudo tee $workdir/arkdep/overlay/etc/shadow
-sudo grep "^${firstname,,}\|^root\|^wheel" /arkdep/overlay/etc/group
-sudo cp $workdir/etc/{subgid,subuid} $workdir/arkdep/overlay/etc/
+sudo grep "^${firstname,,}\|^root" $workdir/etc/passwd | sudo tee $workdir/arkdep/overlay/etc/passwd || quit_on_err 'Failed to write passwd to overlay'
+sudo grep "^${firstname,,}\|^root" $workdir/etc/shadow | sudo tee $workdir/arkdep/overlay/etc/shadow || quit_on_err 'Failed to write shadow to overlay'
+sudo grep "^${firstname,,}\|^root\|^wheel" $workdir/etc/group | sudo tee $workdir/arkdep/overlay/etc/group || quit_on_err 'Failed to write group to overlay'
+sudo cp -v $workdir/etc/{subgid,subuid} $workdir/arkdep/overlay/etc/ || quit_on_err 'Failed to copy subgid and subuid to overlay'
 
 ## Arkdep deployment
 #
 # Deploy latest image
-arch-chroot $workdir arkdep deploy
+sudo arch-chroot $workdir arkdep deploy || quit_on_err 'Failed to deploy image with arkdep'
 
 ## arkdep /var setup
 #
 # Copy previously generated locale over
-sudo cp $workdir/usr/lib/locale/locale-archive $workdir/arkdep/shared/var/usrliblocale/
+sudo cp -v $workdir/usr/lib/locale/locale-archive $workdir/arkdep/shared/var/usrliblocale/ || quit_on_err 'Failed to copy locale-archive to usrliblocale'
 
 # Collect information about the system memory, this is used to determine an apropriate swapfile size
 declare -ri memtotal=$(grep MemTotal /proc/meminfo | awk '{print $2}')
@@ -191,12 +195,6 @@ else
 	sudo arch-chroot $workdir btrfs filesystem mkswapfile --size 6G /arkdep/shared/var/swapfile || quit_on_err 'Failed to create swapfile'
 
 fi
-
-# Copy overlay to new root
-# For some reason this script dislikes catchalls, thus we are using a loop instead
-for f in $(ls $osidir/overlay/); do
-	sudo cp -rv $osidir/overlay/$f $workdir/
-done
 
 # Ensure synced and umount
 sync
