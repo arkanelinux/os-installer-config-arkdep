@@ -139,12 +139,6 @@ declare -r current_keymap=$(gsettings get org.gnome.desktop.input-sources source
 sudo mkdir -p $workdir/arkdep/overlay/etc/dconf/db/local.d
 printf "[org.gnome.desktop.input-sources]\nsources = $current_keymap\n" | sudo tee $workdir/arkdep/overlay/etc/dconf/db/local.d/keymap || quit_on_err 'Failed to set dconf keymap'
 
-# Set auto login if requested
-if [[ $OSI_USER_AUTOLOGIN -eq 1 ]]; then
-	sudo mkdir -p $workdir/arkdep/overlay/etc/gdm/
-	printf "[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${firstname,,}\n" | sudo tee $workdir/arkdep/overlay/etc/gdm/custom.conf || quit_on_err 'Failed to setup automatic login for user'
-fi
-
 ## Add user accounts
 #
 # Get first name
@@ -169,6 +163,13 @@ sudo cp -v $workdir/etc/{subgid,subuid} $workdir/arkdep/overlay/etc/ || quit_on_
 sudo arch-chroot $workdir mkdir -p "/arkdep/shared/home/${firstname,,}" || quit_on_err 'Failed to create userhome on arkdep home subvolume'
 sudo arch-chroot $workdir cp -r /etc/skel/. "/arkdep/shared/home/${firstname,,}" || quit_on_err 'Failed to copy skel to userhome'
 sudo arch-chroot $workdir chown "${firstname,,}:${firstname,,}" "/arkdep/shared/home/${firstname,,}" || quit_on_err 'Failed to change userhome ownership permissions'
+
+# Set auto login if requested
+if [[ $OSI_USER_AUTOLOGIN -eq 1 ]]; then
+	sudo mkdir -p $workdir/arkdep/overlay/etc/gdm/
+	printf "[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${firstname,,}\n" | sudo tee $workdir/arkdep/overlay/etc/gdm/custom.conf || quit_on_err 'Failed to setup automatic login for user'
+fi
+
 
 ## Arkdep deployment
 #
