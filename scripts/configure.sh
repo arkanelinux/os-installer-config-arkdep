@@ -51,7 +51,7 @@ quit_on_err () {
 [[ -z ${OSI_ADDITIONAL_FEATURES+x} ]] && quit_on_err 'OSI_ADDITIONAL_FEATURES is not set'
 
 # Generate the fstab file for fallback
-genfstab $workdir >> sudo tee $workdir/etc/fstab
+genfstab $workdir | sudo tee $workdir/etc/fstab
 
 ## Perpare for arkep deployment
 #
