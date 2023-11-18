@@ -66,7 +66,7 @@ for f in $(ls $osidir/overlay_arkdep/); do
 done
 
 # Update fstab with /boot config
-grep '/boot' $workdir/etc/fstab >> $workdir/arkdep/overlay/etc/fstab
+grep '/boot' $workdir/etc/fstab | sudo tee -a $workdir/arkdep/overlay/etc/fstab
 
 # Ensure etc exists in arkdep overlay, it should already, but lets make sure anyway
 sudo mkdir $workdir/arkdep/overlay/etc
