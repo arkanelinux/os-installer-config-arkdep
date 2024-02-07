@@ -55,6 +55,9 @@ genfstab $workdir | sudo tee $workdir/etc/fstab
 
 ## Perpare for arkep deployment
 #
+# Add GPG trusted keys to install
+sudo cp -v $osidir/bits/trusted-keys $workdir/arkdep/keys/
+
 # Copy overlay to new root
 for f in $(ls $osidir/overlay/); do
 	sudo cp -rv $osidir/overlay/$f $workdir/ || quit_on_err 'Failed to copy overlay to workdir'
@@ -106,7 +109,7 @@ if [[ $OSI_USE_ENCRYPTION == 1 ]]; then
 	initrd /amd-ucode.img
 	initrd /intel-ucode.img
 	initrd /arkdep/%target%/initramfs-linux.img
-	options rd.luks.name=$uuid=arkane_root root=/dev/mapper/arkane_root rootflags=subvol=/arkdep/deployments/%target%/rootfs lsm=landlock,lockdown,yama,integrity,apparmor,bpf quiet splash loglevel=3 vt.global_cursor_default=0 systemd.show_status=auto rd.udev.log_level=3 rw
+	options rd.luks.name=$uuid=arkane_root root=/dev/mapper/arkane_root rootflags=subvol=/arkdep/deployments/%target%/rootfs lsm=landlock,lockdown,yama,integrity,apparmor,bpf quiet splash loglevel=3 systemd.show_status=auto rd.udev.log_level=3 rw
 	END
 
 	echo "options rd.luks.name=$uuid=arkane_root root=/dev/mapper/arkane_root $kernel_params" | sudo tee -a $workdir/boot/loader/entries/arkane.conf || quit_on_err 'Failed to configure bootloader config'
@@ -122,7 +125,7 @@ else
 	initrd /amd-ucode.img
 	initrd /intel-ucode.img
 	initrd /arkdep/%target%/initramfs-linux.img
-	options root="LABEL=arkane_root" rootflags=subvol=/arkdep/deployments/%target%/rootfs lsm=landlock,lockdown,yama,integrity,apparmor,bpf quiet splash loglevel=3 vt.global_cursor_default=0 systemd.show_status=auto rd.udev.log_level=3 rw
+	options root="LABEL=arkane_root" rootflags=subvol=/arkdep/deployments/%target%/rootfs lsm=landlock,lockdown,yama,integrity,apparmor,bpf quiet splash loglevel=3 systemd.show_status=auto rd.udev.log_level=3 rw
 	END
 
 	echo "options root=\"LABEL=arkane_root\" $kernel_params" | sudo tee -a $workdir/boot/loader/entries/arkane.conf
