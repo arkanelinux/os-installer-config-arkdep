@@ -126,7 +126,7 @@ else
 	echo "options root=\"LABEL=arkane_root\" rw" | sudo tee -a $workdir/boot/loader/entries/arkane.conf
 
 	sudo sed -i '/^#/!s/HOOKS=(.*)/HOOKS=(systemd autodetect keyboard keymap consolefont modconf block filesystems fsck)/g' $workdir/etc/mkinitcpio.conf || quit_on_err 'Failed to set hooks'
-	sudo arch-chroot $workdir mkinitcpio -P || quit_on_err 'Failed to generate initramfs'
+	sudo arch-chroot $workdir mkinitcpio --preset arkanelinux || quit_on_err 'Failed to generate initramfs'
 fi
 
 # Set custom keymap, very hacky but it gets the job done
