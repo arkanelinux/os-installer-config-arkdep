@@ -50,7 +50,7 @@ quit_on_err () {
 [[ -z ${OSI_ADDITIONAL_SOFTWARE+x} ]] && quit_on_err 'OSI_ADDITIONAL_SOFTWARE is not set'
 [[ -z ${OSI_ADDITIONAL_FEATURES+x} ]] && quit_on_err 'OSI_ADDITIONAL_FEATURES is not set'
 
-# Generate the fstab file for fallback
+# Generate the fstab file for recovery
 genfstab $workdir | sudo tee $workdir/etc/fstab
 
 ## Perpare for arkep deployment
@@ -92,10 +92,6 @@ sudo ln -sf /usr/share/zoneinfo/$OSI_TIMEZONE $workdir/arkdep/overlay/etc/localt
 # Generate locales
 sudo arch-chroot $workdir locale-gen || quit_on_err 'Failed to locale-gen'
 
-# Set kernel parameters in Systemd-boot based on if disk encryption is used or not
-# This is the base string shared by all configurations
-declare -r kernel_params='lsm=landlock,lockdown,yama,integrity,apparmor,bpf quiet splash loglevel=3 systemd.show_status=auto rd.udev.log_level=3 rw'
-
 # The kernel parameters have to be configured differently based upon if the
 # user opted for disk encryption or not
 if [[ $OSI_USE_ENCRYPTION == 1 ]]; then
@@ -112,10 +108,9 @@ if [[ $OSI_USE_ENCRYPTION == 1 ]]; then
 	options rd.luks.name=$uuid=arkane_root root=/dev/mapper/arkane_root rootflags=subvol=/arkdep/deployments/%target%/rootfs lsm=landlock,lockdown,yama,integrity,apparmor,bpf quiet splash loglevel=3 systemd.show_status=auto rd.udev.log_level=3 rw
 	END
 
-	echo "options rd.luks.name=$uuid=arkane_root root=/dev/mapper/arkane_root $kernel_params" | sudo tee -a $workdir/boot/loader/entries/arkane.conf || quit_on_err 'Failed to configure bootloader config'
-	echo "options rd.luks.name=$uuid=arkane_root root=/dev/mapper/arkane_root $kernel_params" | sudo tee -a $workdir/boot/loader/entries/arkane-fallback.conf || quit_on_err 'Failed to configure bootloader fallback config'
+	echo "options rd.luks.name=$uuid=arkane_root root=/dev/mapper/arkane_root rw" | sudo tee -a $workdir/boot/loader/entries/arkane-recovery.conf || quit_on_err 'Failed to configure bootloader config'
 
-	sudo sed -i '/^#/!s/HOOKS=(.*)/HOOKS=(systemd sd-plymouth autodetect keyboard keymap consolefont modconf block sd-encrypt filesystems fsck)/g' $workdir/etc/mkinitcpio.conf || quit_on_err 'Failed to set hooks'
+	sudo sed -i '/^#/!s/HOOKS=(.*)/HOOKS=(systemd autodetect keyboard keymap consolefont modconf block sd-encrypt filesystems fsck)/g' $workdir/etc/mkinitcpio.conf || quit_on_err 'Failed to set hooks'
 	sudo arch-chroot $workdir mkinitcpio -P || quit_on_err 'Failed to mkinitcpio'
 else
 	# Overwrite default systemd-boot template
@@ -128,13 +123,11 @@ else
 	options root="LABEL=arkane_root" rootflags=subvol=/arkdep/deployments/%target%/rootfs lsm=landlock,lockdown,yama,integrity,apparmor,bpf quiet splash loglevel=3 systemd.show_status=auto rd.udev.log_level=3 rw
 	END
 
-	echo "options root=\"LABEL=arkane_root\" $kernel_params" | sudo tee -a $workdir/boot/loader/entries/arkane.conf
-	echo "options root=\"LABEL=arkane_root\" $kernel_params" | sudo tee -a $workdir/boot/loader/entries/arkane-fallback.conf
+	echo "options root=\"LABEL=arkane_root\" rw" | sudo tee -a $workdir/boot/loader/entries/arkane.conf
 
-	sudo sed -i '/^#/!s/HOOKS=(.*)/HOOKS=(systemd sd-plymouth autodetect keyboard keymap consolefont modconf block filesystems fsck)/g' $workdir/etc/mkinitcpio.conf || quit_on_err 'Failed to set hooks'
+	sudo sed -i '/^#/!s/HOOKS=(.*)/HOOKS=(systemd autodetect keyboard keymap consolefont modconf block filesystems fsck)/g' $workdir/etc/mkinitcpio.conf || quit_on_err 'Failed to set hooks'
 	sudo arch-chroot $workdir mkinitcpio -P || quit_on_err 'Failed to generate initramfs'
 fi
-
 
 # Set custom keymap, very hacky but it gets the job done
 # TODO: Also set in TTY

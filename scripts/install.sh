@@ -112,9 +112,9 @@ done
 
 # Grab package lists
 readarray base_packages < $osidir/bits/base.list || quit_on_err 'Failed to read base.list'
-readarray arkdep_fallback_packages < $osidir/bits/arkdep.list || quit_on_err 'Failed to read arkdep.list'
+readarray arkdep_recovery_packages < $osidir/bits/arkdep.list || quit_on_err 'Failed to read arkdep.list'
 
-# Install the core fallback system
+# Install the core recovery system
 # Retry installing three times before quitting
 for n in {1..3}; do
 	sudo pacstrap $workdir ${base_packages[*]}
@@ -141,10 +141,10 @@ if [[ -d /var/localrepo ]]; then
 	sudo mount -v -m --bind /var/localrepo $workdir/var/localrepo || quit_on_err 'Failed to mount localrepo'
 fi
 
-# Install the remaining packages in fallback system
+# Install the remaining packages in recovery system
 # Retry installing three times before quitting
 for n in {1..3}; do
-	sudo arch-chroot $workdir pacman -S --noconfirm ${arkdep_fallback_packages[*]}
+	sudo arch-chroot $workdir pacman -S --noconfirm ${arkdep_recovery_packages[*]}
 	exit_code=$?
 
 	if [[ $exit_code == 0 ]]; then
