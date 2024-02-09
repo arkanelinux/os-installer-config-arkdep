@@ -100,7 +100,7 @@ if [[ $OSI_USE_ENCRYPTION == 1 ]]; then
 
 	# Overwrite default systemd-boot template
 	cat <<- END | sudo tee $workdir/arkdep/templates/systemd-boot
-	title Arkane GNU/Linux - arkdep
+	title Arkane GNU/Linux - Arkdep
 	linux /arkdep/%target%/vmlinuz
 	initrd /amd-ucode.img
 	initrd /intel-ucode.img
@@ -115,7 +115,7 @@ if [[ $OSI_USE_ENCRYPTION == 1 ]]; then
 else
 	# Overwrite default systemd-boot template
 	cat <<- END | sudo tee $workdir/arkdep/templates/systemd-boot
-	title Arkane GNU/Linux - arkdep
+	title Arkane GNU/Linux - Arkdep
 	linux /arkdep/%target%/vmlinuz
 	initrd /amd-ucode.img
 	initrd /intel-ucode.img
