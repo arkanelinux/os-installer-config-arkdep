@@ -7,6 +7,7 @@ set -o pipefail
 # Commonly used variables
 declare -r workdir='/mnt'
 declare -r osidir='/etc/os-installer'
+declare -r scriptsdir="$osidir/scripts/configure.sh.d"
 
 # Get target disk UUID
 declare -r uuid=$(sudo blkid -o value -s UUID ${OSI_DEVICE_PATH}2)
@@ -37,7 +38,7 @@ declare -r scripts=($(ls $scriptsdir))
 
 # Loop and run install scripts
 for script in ${scripts[@]}; do
-	print "Now running $script\n"
+	printf "Now running $script\n"
 	source $scriptsdir/$script
 done
 
