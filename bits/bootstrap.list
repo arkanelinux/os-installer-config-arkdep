@@ -1,0 +1,17 @@
+amd-ucode
+arkane-keyring
+arkdep
+base
+btrfs-progs
+dracut
+gnupg
+intel-ucode
+linux
+linux-firmware
+mkinitcpio
+skel-arkane
+sudo
+zsh
+zsh-autosuggestions
+zsh-completions
+zsh-syntax-highlighting
