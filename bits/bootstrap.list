@@ -9,6 +9,7 @@ intel-ucode
 linux
 linux-firmware
 mkinitcpio
+plymouth
 skel-arkane
 sudo
 zsh
