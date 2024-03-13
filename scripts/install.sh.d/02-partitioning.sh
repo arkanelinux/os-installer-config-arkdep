@@ -30,8 +30,6 @@ if [[ $OSI_USE_ENCRYPTION -eq 1 ]]; then
 			|| quit_on_err "Failed to mount LUKS/Btrfs root partition to $workdir"
 		sudo mount --mkdir ${partition_path}1 $workdir/boot \
 			|| quit_on_err 'Failed to mount boot'
-		sudo btrfs subvolume create $workdir/home \
-			|| quit_on_err 'Failed to create home subvolume'
 	else
 		# If target is a partition
 		sudo mkfs.fat -F32 $OSI_DEVICE_EFI_PARTITION \
@@ -47,8 +45,6 @@ if [[ $OSI_USE_ENCRYPTION -eq 1 ]]; then
 			|| quit_on_err "Failed to mount LUKS/Btrfs root partition to $workdir"
 		sudo mount --mkdir $OSI_DEVICE_EFI_PARTITION $workdir/boot \
 			|| quit_on_err 'Failed to mount boot'
-		sudo btrfs subvolume create $workdir/home \
-			|| quit_on_err 'Failed to create home subvolume'
 	fi
 
 else
@@ -76,7 +72,6 @@ else
 			|| quit_on_err 'Failed to mount boot'
 	fi
 
-	sudo btrfs subvolume create $workdir/home || quit_on_err 'Failed to create home subvoume'
 fi
 
 # Ensure partitions are mounted, quit and error if not
