@@ -12,7 +12,7 @@ sudo useradd -P $workdir/arkdep/overlay -u 0 -g 0 -G root -d /root root \
 
 sudo groupadd -P $workdir/arkdep/overlay -g 1000 ${firstname,,} \
 	|| quit_on_err 'Failed to create user group'
-sudo useradd -P $workdir/arkdep/overlay -u 1000 -g 1000 -G ${firstname,,} -c "$OSI_USER_NAME" ${firstname,,} \
+sudo useradd -P $workdir/arkdep/overlay -u 1000 -g 1000 -s /usr/bin/zsh -G ${firstname,,} -c "$OSI_USER_NAME" ${firstname,,} \
 	|| quit_on_err 'Failed to create user account'
 
 # Set password
