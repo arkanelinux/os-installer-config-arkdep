@@ -10,6 +10,9 @@ sudo groupadd -P $workdir/arkdep/overlay -g 0 root \
 sudo useradd -P $workdir/arkdep/overlay -u 0 -g 0 -G root -d /root root \
 	|| quit_on_err 'Failed to create root user'
 
+sudo groupadd -P $workdir/arkdep/overlay -g 998 wheel \
+	|| quit_on_err 'Failed to create wheel group'
+
 sudo groupadd -P $workdir/arkdep/overlay -g 1000 ${firstname,,} \
 	|| quit_on_err 'Failed to create user group'
 sudo useradd -P $workdir/arkdep/overlay -u 1000 -g 1000 -s /usr/bin/zsh -G ${firstname,,},wheel -c "$OSI_USER_NAME" ${firstname,,} \
