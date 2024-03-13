@@ -1,5 +1,5 @@
 # Deploy latest image
-sudo ARKDEP_ROOT=$workdir arkdep deploy || quit_on_err 'Failed to deploy image with arkdep'
+sudo ARKDEP_NO_BOOTCTL=1 ARKDEP_ROOT=$workdir arkdep deploy || quit_on_err 'Failed to deploy image with arkdep'
 
 # Copy previously generated locale over
 sudo cp -v /usr/lib/locale/locale-archive $workdir/arkdep/shared/var/usrliblocale/ \
