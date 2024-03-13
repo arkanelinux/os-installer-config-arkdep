@@ -1,19 +1,25 @@
-# Add user, setup groups and set password
-sudo arch-chroot $workdir useradd -m  -c "$OSI_USER_NAME" "${firstname,,}" || quit_on_err 'Failed to add user'
-echo "${firstname,,}:$OSI_USER_PASSWORD" | sudo arch-chroot $workdir chpasswd || quit_on_err 'Failed to set user password'
-sudo arch-chroot $workdir usermod -a -G wheel "${firstname,,}" || quit_on_err 'Failed to make user sudoer'
+# Ensure all relevant files exist
+sudo touch $workdir/arkdep/{passwd,group,shadow}
+sudo chmod -R 600 $workdir/arkdep/shadow
 
-# Set root password
-echo "root:$OSI_USER_PASSWORD" | sudo arch-chroot $workdir chpasswd || quit_on_err 'Failed to set root password'
+# Add user and root account and group
+sudo groupadd -P $workdir/arkdep/overlay -g 0 -d /root root
+sudo useradd -P $workdir/arkdep/overlay -u 0 -g 0 -G root root
 
-# Add non-system user accounts to overlay
-sudo grep "^${firstname,,}\|^root" $workdir/etc/passwd | sudo tee $workdir/arkdep/overlay/etc/passwd || quit_on_err 'Failed to write passwd to overlay'
-sudo grep "^${firstname,,}\|^root" $workdir/etc/shadow | sudo tee $workdir/arkdep/overlay/etc/shadow || quit_on_err 'Failed to write shadow to overlay'
-sudo grep "^${firstname,,}\|^root\|^wheel" $workdir/etc/group | sudo tee $workdir/arkdep/overlay/etc/group || quit_on_err 'Failed to write group to overlay'
-sudo cp -v $workdir/etc/{subgid,subuid} $workdir/arkdep/overlay/etc/ || quit_on_err 'Failed to copy subgid and subuid to overlay'
+sudo groupadd -P $workdir/arkdep/overlay -g 1000 ${firstname,,}
+sudo useradd -P $workdir/arkdep/overlay -u 1000 -g 1000 -G ${firstname,,} -c "$OSI_USER_NAME" ${firstname,,}
+
+# Set password
+printf "root:$OSI_USER_PASSWORD" | sudo chpasswd -P $workdir/arkdep/overlay || quit_on_err 'Failed to set root password'
+printf "${firstname,,}:$OSI_USER_PASSWORD" | sudo chpasswd -P $workdir/arkdep/overlay || quit_on_err 'Failed to set user password'
+
+# Remove user account file backups
+sudo rm -v $workdir/arkdep/overlay/etc/*-
 
 # Prep user homedir
-sudo arch-chroot $workdir mkdir -p "/arkdep/shared/home/${firstname,,}" || quit_on_err 'Failed to create userhome on arkdep home subvolume'
-sudo arch-chroot $workdir cp -r /etc/skel/. "/arkdep/shared/home/${firstname,,}" || quit_on_err 'Failed to copy skel to userhome'
-sudo arch-chroot $workdir chown -R "${firstname,,}:${firstname,,}" "/arkdep/shared/home/${firstname,,}" || quit_on_err 'Failed to change userhome ownership permissions'
+sudo mkdir -p $workdir/arkdep/shared/home/${firstname,,} || quit_on_err 'Failed to create userhome on arkdep home subvolume'
 
+# Copy skel instead after deploy?
+# No need to copy skel to root home, this is done during image building
+sudo cp -r /etc/skel/. $workdir/arkdep/shared/home/${firstname,,} || quit_on_err 'Failed to copy skel to userhome'
+sudo chown -R 1000:1000 $workdir/arkdep/shared/home/${firstname,,} || quit_on_err 'Failed to change userhome ownership permissions'
