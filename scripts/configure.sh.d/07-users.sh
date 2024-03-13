@@ -3,8 +3,8 @@ sudo touch $workdir/arkdep/{passwd,group,shadow}
 sudo chmod -R 600 $workdir/arkdep/shadow
 
 # Add user and root account and group
-sudo groupadd -P $workdir/arkdep/overlay -g 0 -d /root root
-sudo useradd -P $workdir/arkdep/overlay -u 0 -g 0 -G root root
+sudo groupadd -P $workdir/arkdep/overlay -g 0 root
+sudo useradd -P $workdir/arkdep/overlay -u 0 -g 0 -G root -d /root root
 
 sudo groupadd -P $workdir/arkdep/overlay -g 1000 ${firstname,,}
 sudo useradd -P $workdir/arkdep/overlay -u 1000 -g 1000 -G ${firstname,,} -c "$OSI_USER_NAME" ${firstname,,}
