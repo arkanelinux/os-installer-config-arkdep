@@ -10,6 +10,10 @@ fi
 echo "LANG=\"$OSI_LOCALE\"" | sudo tee $workdir/arkdep/overlay/etc/locale.conf \
 	|| quit_on_err 'Failed to set default locale'
 
+# A very ugly hack, generate the locales in the live environment, later copy them over
+sudo cp $workdir/arkdep/overlay/etc/locale.conf /etc/
+sudo locale-gen
+
 # Set timezome
 sudo ln -sf /usr/share/zoneinfo/$OSI_TIMEZONE $workdir/arkdep/overlay/etc/localtime \
 	|| quit_on_err 'Failed to set timezone in arkdep overlay'

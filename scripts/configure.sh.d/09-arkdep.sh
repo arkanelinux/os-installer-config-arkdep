@@ -2,7 +2,7 @@
 sudo arch-chroot $workdir arkdep deploy || quit_on_err 'Failed to deploy image with arkdep'
 
 # Copy previously generated locale over
-sudo cp -v $workdir/usr/lib/locale/locale-archive $workdir/arkdep/shared/var/usrliblocale/ \
+sudo cp -v /usr/lib/locale/locale-archive $workdir/arkdep/shared/var/usrliblocale/ \
 	|| quit_on_err 'Failed to copy locale-archive to usrliblocale'
 
 # Collect information about the system memory, this is used to determine an apropriate swapfile size
