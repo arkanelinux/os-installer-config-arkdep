@@ -1,5 +1,5 @@
 # Ensure all relevant files exist
-sudo touch $workdir/arkdep/overlay/etc/{passwd,group,shadow} \
+sudo touch $workdir/arkdep/overlay/etc/{passwd,group,shadow,subgid,subuid} \
 	|| quit_on_err 'Failed to create user account files'
 sudo chmod -R 600 $workdir/arkdep/overlay/etc/shadow \
 	|| quit_on_err 'Failed to set shadow file permissions'
