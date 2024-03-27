@@ -62,13 +62,13 @@ else
 			|| quit_on_err 'Failed to mount boot'
 	else
 		# If target is a partition
-		sudo mkfs.fat -F32 $OSI_DEVICE_EFIT_PARTITION \
+		sudo mkfs.fat -F32 $OSI_DEVICE_EFI_PARTITION \
 			|| quit_on_err "Failed to create FAT filesystem on $OSI_EFI_PARTITION"
 		sudo mkfs.btrfs -f -L $rootlabel $OSI_DEVICE_PATH \
 			|| quit_on_err "Failed to create root on $OSI_DEVICE_PATH"
 		sudo mount -o compress=zstd $OSI_DEVICE_PATH $workdir \
 			|| quit_on_err "Failed to mount root to $workdir"
-		sudo mount --mkdir $OSI_DEVICE_EFIT_PARTITION $workdir/boot \
+		sudo mount --mkdir $OSI_DEVICE_EFI_PARTITION $workdir/boot \
 			|| quit_on_err 'Failed to mount boot'
 	fi
 

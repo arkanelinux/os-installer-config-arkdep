@@ -19,16 +19,4 @@ if [[ ! -n $sudo_ok ]]; then
 	exit 1
 fi
 
-# Function used to quit and notify user or error
-quit_on_err () {
-	if [[ -n $1 ]]; then
-		printf "$1\n"
-	fi
-
-	# Ensure console prints error
-	sleep 2
-
-	exit 1
-}
-
 exit 0
