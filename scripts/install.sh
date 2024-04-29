@@ -10,10 +10,6 @@ declare -r osidir='/etc/os-installer'
 declare -r scriptsdir="$osidir/scripts/install.sh.d"
 declare -r rootlabel='arkane_root'
 
-# Load package list files
-readarray base_packages < $osidir/bits/bootstrap.list \
-	|| quit_on_err 'Failed to read base.list'
-
 ## Set common functions
 #
 # Quit script with error if called
