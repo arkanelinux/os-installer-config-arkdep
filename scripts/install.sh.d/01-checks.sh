@@ -19,5 +19,5 @@ fi
 [[ -z ${OSI_ENCRYPTION_PIN+x} ]] && quit_on_err 'OSI_ENCRYPTION_PIN not set'
 
 # Check if something is already mounted to $workdir
-mountpoint -q $workdir && \
+mountpoint -q $workdir &&
 	quit_on_err "$workdir is already a mountpoint, unmount this directory and try again"
