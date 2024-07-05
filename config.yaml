@@ -32,8 +32,8 @@ welcome_page:
 minimum_disk_size: 64
 offer_disk_encryption: yes
 
-skip_user: no
-skip_locale: no
+skip_user: yes
+skip_locale: yes
 
 failure_help_url: 'https://duckduckgo.com/?q="os-installer {}"+"failed installation"'
 
