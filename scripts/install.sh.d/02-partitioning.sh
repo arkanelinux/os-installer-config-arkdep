@@ -6,11 +6,14 @@ fi
 
 # NVMe drives follow a slightly different naming scheme to other block devices
 # this will change `/dev/nvme0n1` to `/dev/nvme0n1p` for easier parsing later
-if [[ $OSI_DEVICE_PATH == *"nvme"*"n"* ]]; then
+if [[ $OSI_DEVICE_IS_PARTITION -ne 0 ]]; then
+	declare -r partition_path="${OSI_DEVICE_PATH}"
+elif [[ $OSI_DEVICE_PATH == *"nvme"*"n"* ]]; then
 	declare -r partition_path="${OSI_DEVICE_PATH}p"
 else
 	declare -r partition_path="${OSI_DEVICE_PATH}"
 fi
+
 
 # Check if encryption is requested, write filesystems accordingly
 if [[ $OSI_USE_ENCRYPTION -eq 1 ]]; then

@@ -10,7 +10,9 @@ declare -r osidir='/etc/os-installer'
 declare -r scriptsdir="$osidir/scripts/configure.sh.d"
 
 # Get target disk UUID
-if [[ $OSI_DEVICE_PATH == *"nvme"*"n"* ]]; then
+if [[ $OSI_DEVICE_IS_PARTITION -ne 0 ]]; then
+	declare -r uuid=$(sudo blkid -o value -s UUID ${OSI_DEVICE_PATH})
+elif [[ $OSI_DEVICE_PATH == *"nvme"*"n"* ]]; then
 	declare -r uuid=$(sudo blkid -o value -s UUID ${OSI_DEVICE_PATH}p2)
 else
 	declare -r uuid=$(sudo blkid -o value -s UUID ${OSI_DEVICE_PATH}2)
