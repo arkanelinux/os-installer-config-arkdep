@@ -10,7 +10,11 @@ declare -r osidir='/etc/os-installer'
 declare -r scriptsdir="$osidir/scripts/configure.sh.d"
 
 # Get target disk UUID
-declare -r uuid=$(sudo blkid -o value -s UUID ${OSI_DEVICE_PATH}2)
+if [[ $OSI_DEVICE_PATH == *"nvme"*"n"* ]]; then
+	declare -r uuid=$(sudo blkid -o value -s UUID ${OSI_DEVICE_PATH}p2)
+else
+	declare -r uuid=$(sudo blkid -o value -s UUID ${OSI_DEVICE_PATH}2)
+fi
 
 # User can provide full name as input, if they do only the first word will be used as username
 # OSI_USER_NAME is still used in the account comments
