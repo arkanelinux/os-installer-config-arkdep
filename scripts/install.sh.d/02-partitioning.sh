@@ -21,7 +21,7 @@ if [[ $OSI_USE_ENCRYPTION -eq 1 ]]; then
 	# If user requested disk encryption
 	if [[ $OSI_DEVICE_IS_PARTITION -eq 0 ]]; then
 		# If target is a drive
-		sudo mkfs.fat -F32 ${partition_path}1 || quit_on_err "Failed to create FAT filesystem on ${partition_path}1"
+		sudo mkfs.fat -F32 ${partition_path}1 -n $bootlabel || quit_on_err "Failed to create FAT filesystem on ${partition_path}1"
 		echo $OSI_ENCRYPTION_PIN | sudo cryptsetup -q luksFormat ${partition_path}2 ||
 			quit_on_err "Failed to create LUKS partition on ${partition_path}2"
 
@@ -38,7 +38,7 @@ if [[ $OSI_USE_ENCRYPTION -eq 1 ]]; then
 			quit_on_err 'Failed to mount boot'
 	else
 		# If target is a partition
-		sudo mkfs.fat -F32 $OSI_DEVICE_EFI_PARTITION ||
+		sudo mkfs.fat -F32 $OSI_DEVICE_EFI_PARTITION -n $bootlabel ||
 			quit_on_err "Failed to create FAT filesystem on $OSI_DEVICE_EFI_PARTITION"
 
 		echo $OSI_ENCRYPTION_PIN | sudo cryptsetup -q luksFormat $OSI_DEVICE_PATH ||
@@ -62,7 +62,7 @@ else
 	# If no disk encryption requested
 	if [[ $OSI_DEVICE_IS_PARTITION -eq 0 ]]; then
 		# If target is a drive
-		sudo mkfs.fat -F32 ${partition_path}1 ||
+		sudo mkfs.fat -F32 ${partition_path}1 -n $bootlabel ||
 			quit_on_err "Failed to create FAT filesystem on ${partition_path}1"
 
 		sudo mkfs.btrfs -f -L $rootlabel ${partition_path}2 ||
@@ -75,7 +75,7 @@ else
 			quit_on_err 'Failed to mount boot'
 	else
 		# If target is a partition
-		sudo mkfs.fat -F32 $OSI_DEVICE_EFI_PARTITION ||
+		sudo mkfs.fat -F32 $OSI_DEVICE_EFI_PARTITION -n $bootlabel ||
 			quit_on_err "Failed to create FAT filesystem on $OSI_EFI_PARTITION"
 
 		sudo mkfs.btrfs -f -L $rootlabel $OSI_DEVICE_PATH ||

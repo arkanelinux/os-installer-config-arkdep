@@ -9,6 +9,7 @@ declare -r workdir='/mnt'
 declare -r osidir='/etc/os-installer'
 declare -r scriptsdir="$osidir/scripts/install.sh.d"
 declare -r rootlabel='arkane_root'
+declare -r bootlabel='arkane_boot'
 
 ## Set common functions
 #
