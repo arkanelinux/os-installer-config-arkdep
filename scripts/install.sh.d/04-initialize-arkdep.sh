@@ -3,7 +3,7 @@ sudo ARKDEP_NO_BOOTCTL=1 ARKDEP_ROOT="$workdir" arkdep init ||
 	quit_on_err 'Failed to init arkep'
 
 # Add proper config file
-cat <<-END > $workdir/arkdep/config
+cat <<-END | sudo tee $workdir/arkdep/config
 # Write /arkdep/overlay overlay to new deployments
 enable_overlay=1
 
