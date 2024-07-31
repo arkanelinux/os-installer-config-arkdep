@@ -8,8 +8,8 @@ set -o pipefail
 declare -r workdir='/mnt'
 declare -r osidir='/etc/os-installer'
 declare -r scriptsdir="$osidir/scripts/install.sh.d"
-declare -r rootlabel='manjaro_root'
-declare -r bootlabel='manjaro_boot'
+declare -r rootlabel='mjr_root'
+declare -r bootlabel='mjr_boot'
 
 ## Set common functions
 #
