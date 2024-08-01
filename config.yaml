@@ -30,6 +30,6 @@ skip_locale: yes
 
 failure_help_url: 'https://duckduckgo.com/?q="os-installer {}"+"failed installation"'
 
-browser_cmd: 'firefox'
+browser_cmd: 'epiphany'
 disks_cmd  : 'gnome-disks'
 wifi_cmd   : 'gnome-control-center wifi'
