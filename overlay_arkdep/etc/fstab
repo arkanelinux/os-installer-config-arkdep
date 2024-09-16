@@ -1,7 +1,8 @@
-LABEL=arkane_root		/home								btrfs     	rw,relatime,subvol=arkdep/shared/home,compress=zstd	0 1
-LABEL=arkane_root		/root								btrfs     	rw,relatime,subvol=arkdep/shared/root,compress=zstd	0 1
-LABEL=arkane_root		/arkdep							btrfs     	rw,relatime,subvol=arkdep,compress=zstd	0 1
-LABEL=arkane_root		/var/lib/flatpak		btrfs     	rw,relatime,subvol=arkdep/shared/flatpak,compress=zstd 0 1
-LABEL=arkane_boot		/boot								vfat      	rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro	0 2
+LABEL=manjaro_root	/home			btrfs	rw,relatime,ssd,discard=async,space_cache=v2,subvol=arkdep/shared/home,compress=zstd			0 1
+LABEL=manjaro_root	/root			btrfs	rw,relatime,ssd,discard=async,space_cache=v2,subvol=arkdep/shared/root,compress=zstd			0 1
+LABEL=manjaro_root	/arkdep			btrfs	rw,relatime,ssd,discard=async,space_cache=v2,subvol=arkdep,compress=zstd				0 1
+LABEL=manjaro_root	/var/lib/flatpak	btrfs	rw,relatime,ssd,discard=async,space_cache=v2,subvol=arkdep/shared/flatpak,compress=zstd			0 1
+LABEL=manjaro_esp      	/boot     		vfat	rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro	0 2
 
-/arkdep/shared/swapfile				none      	swap      	defaults  	0 0
+
+/arkdep/shared/swapfile	none			swap	defaults												0 0
