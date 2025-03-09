@@ -10,6 +10,8 @@ if [[ $OSI_DEVICE_IS_PARTITION -ne 0 ]]; then
 	declare -r partition_path="${OSI_DEVICE_PATH}"
 elif [[ $OSI_DEVICE_PATH == *"nvme"*"n"* ]]; then
 	declare -r partition_path="${OSI_DEVICE_PATH}p"
+elif [[ $OSI_DEVICE_PATH == *"mmcblk"* ]]; then
+	declare -r partition_path="${OSI_DEVICE_PATH}p"
 else
 	declare -r partition_path="${OSI_DEVICE_PATH}"
 fi
